@@ -65,7 +65,7 @@ int main()
 
         data_byte = 0x00;
         serial_port.WriteByte(data_byte);
-        erial_port.DrainWriteBuffer() ;
+        serial_port.DrainWriteBuffer() ;
 
         data_byte = 0x05;
         serial_port.WriteByte(data_byte);
@@ -73,7 +73,7 @@ int main()
 
         data_byte = 0x00;
         serial_port.WriteByte(data_byte);
-        /serial_port.DrainWriteBuffer() ;
+        serial_port.DrainWriteBuffer() ;
 
         data_byte = 0x00;
         serial_port.WriteByte(data_byte);
