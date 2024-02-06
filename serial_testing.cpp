@@ -57,43 +57,43 @@ int main()
         // serial port.
         char data_byte = 0xFF;
         serial_port.WriteByte(data_byte);
-        //serial_port.DrainWriteBuffer();
+        serial_port.DrainWriteBuffer();
 
-        // data_byte = 0xFF;
-        //  serial_port.WriteByte(data_byte);
-        // serial_port.DrainWriteBuffer() ;
+        data_byte = 0xFF;
+        serial_port.WriteByte(data_byte);
+        serial_port.DrainWriteBuffer() ;
 
-        //  data_byte = 0x00;
-        //  serial_port.WriteByte(data_byte);
-        // serial_port.DrainWriteBuffer() ;
+        data_byte = 0x00;
+        serial_port.WriteByte(data_byte);
+        erial_port.DrainWriteBuffer() ;
 
-        //  data_byte = 0x05;
-        //  serial_port.WriteByte(data_byte);
-        // serial_port.DrainWriteBuffer() ;
+        data_byte = 0x05;
+        serial_port.WriteByte(data_byte);
+        serial_port.DrainWriteBuffer() ;
 
-        //  data_byte = 0x00;
-        //  serial_port.WriteByte(data_byte);
-        // serial_port.DrainWriteBuffer() ;
+        data_byte = 0x00;
+        serial_port.WriteByte(data_byte);
+        /serial_port.DrainWriteBuffer() ;
 
-        //  data_byte = 0x00;
-        //  serial_port.WriteByte(data_byte);
-        // serial_port.DrainWriteBuffer() ;
+        data_byte = 0x00;
+        serial_port.WriteByte(data_byte);
+        serial_port.DrainWriteBuffer() ;
 
-        //  data_byte = 0x00;
-        //  serial_port.WriteByte(data_byte);
-        // serial_port.DrainWriteBuffer() ;
+        data_byte = 0x00;
+        serial_port.WriteByte(data_byte);
+        serial_port.DrainWriteBuffer() ;
 
-        //  data_byte = 0xAA;
-        //  serial_port.WriteByte(data_byte);
-        // serial_port.DrainWriteBuffer() ;
+        data_byte = 0xAA;
+        serial_port.WriteByte(data_byte);
+        serial_port.DrainWriteBuffer() ;
 
-         //data_byte = 0x00;
-         //serial_port.WriteByte(data_byte);
-        // serial_port.DrainWriteBuffer() ;
+         data_byte = 0x00;
+         serial_port.WriteByte(data_byte);
+        serial_port.DrainWriteBuffer() ;
 
-         //data_byte = 0xFE;
-         //serial_port.WriteByte(data_byte);
-        // serial_port.DrainWriteBuffer() ;
+         data_byte = 0xFE;
+         serial_port.WriteByte(data_byte);
+        serial_port.DrainWriteBuffer() ;
     
         serial_port.Close();
     
