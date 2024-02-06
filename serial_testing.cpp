@@ -94,7 +94,9 @@ int main()
          //data_byte = 0xFE;
          //serial_port.WriteByte(data_byte);
         // serial_port.DrainWriteBuffer() ;
-
+    
+        serial_port.Close();
+    
         // Print to the terminal what is being written to the serial port.
         std::cout << data_byte ;
 
