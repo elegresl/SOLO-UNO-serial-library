@@ -43,7 +43,7 @@ int main()
    
 
   
-   serial_stream.write(FFFF00150000000200ff,10) 
+   serial_stream.write('FFFF00150000000200ff',10) 
   sleep(1);
   serial_stream.DrainWriteBuffer();
 
