@@ -78,13 +78,13 @@ int main()
         std::cout << "Second byte written" << std::endl ;
 
           //data_byte = data_string[2];
-          data_byte = 0x00;
+          data_byte = 0x01;
           serial_port.WriteByte(data_byte);
          serial_port.DrainWriteBuffer() ;
          std::cout << "Third byte written" << std::endl ;
 
           //data_byte = data_string[3];
-          data_byte = 0x15;
+          data_byte = 0x81;
           serial_port.WriteByte(data_byte);
          serial_port.DrainWriteBuffer() ;
          std::cout << "4th byte written" << std::endl ;
@@ -108,7 +108,7 @@ int main()
         std::cout << "7th byte written" << std::endl ;
 
           //data_byte = data_string[7];
-          data_byte = 0x01;
+          data_byte = 0x00;
           serial_port.WriteByte(data_byte);
          serial_port.DrainWriteBuffer() ;
          std::cout << "8th byte written" << std::endl;
