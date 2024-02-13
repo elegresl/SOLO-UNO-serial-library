@@ -15,7 +15,7 @@ int main()
 {
   using namespace std::this_thread; // sleep_for, sleep_until
   using namespace std::chrono;
-  //using namespace std::unistd;
+  
    SerialStream serial_stream;
 
    
@@ -29,9 +29,9 @@ int main()
    char read_byte_2 = 'B';
   
    serial_stream << 0xFF;
-  unistd::sleep(1);
+  sleep(1);
   serial_stream << 0xFF;
- unistd::sleep(1);
+  sleep(1);
 
   serial_stream << 0x00;
   sleep(1);
