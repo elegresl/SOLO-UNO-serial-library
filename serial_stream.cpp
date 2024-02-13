@@ -19,7 +19,7 @@ int main()
    SerialStream serial_stream;
 
    
-   serial_stream.Open( "/dev/ttyUSB1" );
+   serial_stream.Open( "/dev/ttyACM0" );
 
    serial_stream.SetBaudRate( BaudRate::BAUD_115200 );
 
