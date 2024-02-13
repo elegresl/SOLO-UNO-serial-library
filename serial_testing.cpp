@@ -131,10 +131,10 @@ int main()
         serial_port.Read(reading, 10, 5000);
 
 
-    std::stringstream ss;
-    ss << reading;
-    cout << ss.str();
-        std::cout << ss.str(); << std::endl;
+        std::stringstream ss;
+        ss << reading;
+    
+        std::cout << ss.str() << std::endl;
     
         outputFile << ss.str();
         outputFile.close();
