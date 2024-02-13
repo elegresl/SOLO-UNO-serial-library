@@ -3,6 +3,10 @@
 #include <chrono>
 #include <thread>
 
+#include <cstdlib>
+#include <fstream>
+#include <iostream>
+
 #include <unistd.h>
 
 using namespace LibSerial;
