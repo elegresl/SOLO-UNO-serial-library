@@ -43,12 +43,45 @@ int main()
    
 
   
-   serial_stream.write('FFFF00150000000200ff',10) 
-  sleep(1);
-  serial_stream.DrainWriteBuffer();
+   serial_stream.write(0xFF,1);
+    sleep(1);
+    serial_stream.DrainWriteBuffer();
 
+    serial_stream.write(0xFF,1);
+    sleep(1);
+    serial_stream.DrainWriteBuffer();
+
+    serial_stream.write(0x00,1);
+    sleep(1);
+    serial_stream.DrainWriteBuffer();
+
+    serial_stream.write(0x15,1);
+    sleep(1);
+    serial_stream.DrainWriteBuffer();
   
-  
+    serial_stream.write(0x00,1);
+    sleep(1);
+    serial_stream.DrainWriteBuffer();
+
+  serial_stream.write(0x00,1);
+    sleep(1);
+    serial_stream.DrainWriteBuffer();
+
+  serial_stream.write(0x00,1);
+    sleep(1);
+    serial_stream.DrainWriteBuffer();
+
+  serial_stream.write(0x02,1);
+    sleep(1);
+    serial_stream.DrainWriteBuffer();
+
+  serial_stream.write(0x00,1);
+    sleep(1);
+    serial_stream.DrainWriteBuffer();
+
+  serial_stream.write(0xFF,1);
+    sleep(1);
+    serial_stream.DrainWriteBuffer();
 
    serial_stream.Close();
 }
