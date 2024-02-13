@@ -3,6 +3,8 @@
 #include <chrono>
 #include <thread>
 
+#include <unistd.h>
+
 using namespace LibSerial;
 
 int main()
@@ -22,29 +24,29 @@ int main()
    char read_byte_2 = 'B';
   
    serial_stream << 0xFF;
-  sleep_for(miliseconds(10));
+  sleep(1);
   serial_stream << 0xFF;
-  sleep_for(miliseconds(10));
+ sleep(1);
 
   serial_stream << 0x00;
-  sleep_for(miliseconds(10));
+  sleep(1);
   serial_stream << 0x15;
-  sleep_for(miliseconds(10));
+  sleep(1);
 
   serial_stream << 0x00;
-  sleep_for(miliseconds(10));
+  sleep(1);
   serial_stream << 0x00;
-  sleep_for(miliseconds(10));
+  sleep(1);;
 
   serial_stream << 0x00;
-  sleep_for(miliseconds(10));
+  sleep(1);
   serial_stream << 0x02;
-  sleep_for(miliseconds(10));
+  sleep(1);
 
   serial_stream << 0x00;
-  sleep_for(miliseconds(10));
+  sleep(1);;
   serial_stream << 0xFF;
-  sleep_for(miliseconds(10));
+  sleep(1);
 
    // Read a character.
 
