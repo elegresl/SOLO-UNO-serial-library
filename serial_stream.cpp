@@ -18,47 +18,37 @@ int main()
   
    SerialStream serial_stream;
 
-   
-   serial_stream.Open( "/dev/ttyACM0" );
-
+  try
+    {
+        // Open the Serial Port at the desired hardware port.
+        serial_stream.Open("/dev/ttyACM0) ;
+    }
+    catch (const OpenFailed&)
+    {
+        std::cerr << "The serial port did not open correctly." << std::endl ;
+        return EXIT_FAILURE ;
+    }
    serial_stream.SetBaudRate( BaudRate::BAUD_115200 );
+     // Set the number of data bits.
+    serial_stream.SetCharacterSize(CharacterSize::CHAR_SIZE_8) ;
 
+    // Turn off hardware flow control.
+    serial_stream.SetFlowControl(FlowControl::FLOW_CONTROL_NONE) ;
+
+    // Disable parity.
+    serial_stream.SetParity(Parity::PARITY_NONE) ;
+
+    // Set the number of stop bits.
+    serial_stream.SetStopBits(StopBits::STOP_BITS_1) ;
    
 
-   
-   char read_byte_2 = 'B';
   
-   serial_stream << 0xFF;
+   serial_stream.write({0xFF,0xFF,0x00,0x15,0x00,0x00,0x00,0x02,0x00,0xff},10) 
   sleep(1);
-  serial_stream << 0xFF;
-  sleep(1);
+  serial_stream.DrainWriteBuffer();
 
-  serial_stream << 0x00;
-  sleep(1);
-  serial_stream << 0x15;
-  sleep(1);
-
-  serial_stream << 0x00;
-  sleep(1);
-  serial_stream << 0x00;
-  sleep(1);;
-
-  serial_stream << 0x00;
-  sleep(1);
-  serial_stream << 0x02;
-  sleep(1);
-
-  serial_stream << 0x00;
-  sleep(1);;
-  serial_stream << 0xFF;
-  sleep(1);
-
-   // Read a character.
-
-   serial_stream >> read_byte_2;
-
-   
-   std::cout << "serial_stream read: " << read_byte_2 << std::endl;
+  
+  
 
    serial_stream.Close();
 }
