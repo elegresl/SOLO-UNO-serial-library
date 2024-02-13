@@ -13,6 +13,8 @@
 #include <chrono>
 #include <thread>
 
+#include <sstream>
+
 constexpr const char* const SERIAL_PORT_2 = "/dev/ttyACM0" ;
 
 /**
@@ -127,9 +129,14 @@ int main()
 
         std::string reading;
         serial_port.Read(reading, 10, 5000);
-        std::cout << reading << std::endl;
+
+
+    std::stringstream ss;
+    ss << reading;
+    cout << ss.str();
+        std::cout << ss.str(); << std::endl;
     
-        outputFile << reading;
+        outputFile << ss.str();
         outputFile.close();
 
         serial_port.Close();
