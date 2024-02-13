@@ -43,54 +43,54 @@ int main()
    
 char data_byte = 0xFF;
   
-   serial_stream.write(data_byte,1);
+   serial_stream.write(&data_byte,1);
     sleep(1);
     serial_stream.DrainWriteBuffer();
 
-    serial_stream.write(data_byte,1);
+    serial_stream.write(&data_byte,1);
     sleep(1);
     serial_stream.DrainWriteBuffer();
 
     data_byte = 0x00;
   
-    serial_stream.write(data_byte,1);
+    serial_stream.write(&data_byte,1);
     sleep(1);
     serial_stream.DrainWriteBuffer();
 
     data_byte = 0x15;
   
-    serial_stream.write(data_byte,1);
+    serial_stream.write(&data_byte,1);
     sleep(1);
     serial_stream.DrainWriteBuffer();
 
   data_byte = 0x00;
   
-    serial_stream.write(data_byte,1);
+    serial_stream.write(&data_byte,1);
     sleep(1);
     serial_stream.DrainWriteBuffer();
 
-  serial_stream.write(data_byte,1);
+  serial_stream.write(&data_byte,1);
     sleep(1);
     serial_stream.DrainWriteBuffer();
 
-  serial_stream.write(data_byte,1);
+  serial_stream.write(&data_byte,1);
     sleep(1);
     serial_stream.DrainWriteBuffer();
   
 data_byte = 0x02;
   
-  serial_stream.write(data_byte,1);
+  serial_stream.write(&data_byte,1);
     sleep(1);
     serial_stream.DrainWriteBuffer();
   
 data_byte = 0x00;
   
-  serial_stream.write(data_byte,1);
+  serial_stream.write(&data_byte,1);
     sleep(1);
     serial_stream.DrainWriteBuffer();
-data_bute = 0xFF;
+data_byte = 0xFF;
   
-  serial_stream.write(data_byte,1);
+  serial_stream.write(&data_byte,1);
     sleep(1);
     serial_stream.DrainWriteBuffer();
 
