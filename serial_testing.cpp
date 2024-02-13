@@ -127,13 +127,11 @@ int main()
 
         std::string reading;
         serial_port.Read(reading, 10, 5000);
-        std::cout << reading;
+        std::cout << reading << std::endl;
+    
         outputFile << reading;
         outputFile.close();
 
         serial_port.Close();
-
-    // Successful program completion.
-    std::cout << "The example program successfully completed!" << std::endl ;
     return EXIT_SUCCESS ;
 }
