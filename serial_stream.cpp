@@ -41,45 +41,56 @@ int main()
     // Set the number of stop bits.
     serial_stream.SetStopBits(StopBits::STOP_BITS_1) ;
    
-
+char data_byte = 0xFF;
   
-   serial_stream.write(0xFF,1);
+   serial_stream.write(data_byte,1);
     sleep(1);
     serial_stream.DrainWriteBuffer();
 
-    serial_stream.write(0xFF,1);
+    serial_stream.write(data_byte,1);
     sleep(1);
     serial_stream.DrainWriteBuffer();
 
-    serial_stream.write(0x00,1);
+    data_byte = 0x00;
+  
+    serial_stream.write(data_byte,1);
     sleep(1);
     serial_stream.DrainWriteBuffer();
 
-    serial_stream.write(0x15,1);
+    data_byte = 0x15;
+  
+    serial_stream.write(data_byte,1);
+    sleep(1);
+    serial_stream.DrainWriteBuffer();
+
+  data_byte = 0x00;
+  
+    serial_stream.write(data_byte,1);
+    sleep(1);
+    serial_stream.DrainWriteBuffer();
+
+  serial_stream.write(data_byte,1);
+    sleep(1);
+    serial_stream.DrainWriteBuffer();
+
+  serial_stream.write(data_byte,1);
     sleep(1);
     serial_stream.DrainWriteBuffer();
   
-    serial_stream.write(0x00,1);
+data_byte = 0x02;
+  
+  serial_stream.write(data_byte,1);
     sleep(1);
     serial_stream.DrainWriteBuffer();
-
-  serial_stream.write(0x00,1);
+  
+data_byte = 0x00;
+  
+  serial_stream.write(data_byte,1);
     sleep(1);
     serial_stream.DrainWriteBuffer();
-
-  serial_stream.write(0x00,1);
-    sleep(1);
-    serial_stream.DrainWriteBuffer();
-
-  serial_stream.write(0x02,1);
-    sleep(1);
-    serial_stream.DrainWriteBuffer();
-
-  serial_stream.write(0x00,1);
-    sleep(1);
-    serial_stream.DrainWriteBuffer();
-
-  serial_stream.write(0xFF,1);
+data_bute = 0xFF;
+  
+  serial_stream.write(data_byte,1);
     sleep(1);
     serial_stream.DrainWriteBuffer();
 
