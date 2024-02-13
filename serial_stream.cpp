@@ -43,53 +43,62 @@ int main()
    
 char data_byte = 0xFF;
   
+  std::cout << "Writing 1st byte" << std::endl ;
    serial_stream.write(&data_byte,1);
     sleep(1);
     serial_stream.DrainWriteBuffer();
 
+  std::cout << "Writing 2nd byte" << std::endl ;
     serial_stream.write(&data_byte,1);
     sleep(1);
     serial_stream.DrainWriteBuffer();
 
     data_byte = 0x00;
-  
+
+    std::cout << "Writing 3rd byte" << std::endl ;
     serial_stream.write(&data_byte,1);
     sleep(1);
     serial_stream.DrainWriteBuffer();
 
     data_byte = 0x15;
-  
+
+    std::cout << "Writing 4th byte" << std::endl ;
     serial_stream.write(&data_byte,1);
     sleep(1);
     serial_stream.DrainWriteBuffer();
 
   data_byte = 0x00;
-  
+
+    std::cout << "Writing 5th byte" << std::endl;
     serial_stream.write(&data_byte,1);
     sleep(1);
     serial_stream.DrainWriteBuffer();
 
+  std::cout << "Writing 6th byte" << std::endl ;
   serial_stream.write(&data_byte,1);
     sleep(1);
     serial_stream.DrainWriteBuffer();
 
+  std::cout << "Writing 7th byte" << std::endl ;
   serial_stream.write(&data_byte,1);
     sleep(1);
     serial_stream.DrainWriteBuffer();
   
 data_byte = 0x02;
-  
+
+  std::cout << "Writing 8th byte" << std::endl ;
   serial_stream.write(&data_byte,1);
     sleep(1);
     serial_stream.DrainWriteBuffer();
   
 data_byte = 0x00;
-  
+  std::cout << "Writing 9th byte" << std::endl ;
   serial_stream.write(&data_byte,1);
     sleep(1);
     serial_stream.DrainWriteBuffer();
 data_byte = 0xFF;
-  
+
+  std::cout << "Writing 10th byte" << std::endl ;
   serial_stream.write(&data_byte,1);
     sleep(1);
     serial_stream.DrainWriteBuffer();
