@@ -1,6 +1,7 @@
 #include <libserial/SerialPort.h>
 #include <libserial/SerialStream.h>
 #include <chrono>
+#include <thread>
 
 using namespace LibSerial;
 
