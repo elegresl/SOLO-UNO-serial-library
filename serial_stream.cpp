@@ -21,7 +21,7 @@ int main()
   try
     {
         // Open the Serial Port at the desired hardware port.
-        serial_stream.Open("/dev/ttyACM0) ;
+        serial_stream.Open("/dev/ttyACM0") ;
     }
     catch (const OpenFailed&)
     {
@@ -43,7 +43,7 @@ int main()
    
 
   
-   serial_stream.write({0xFF,0xFF,0x00,0x15,0x00,0x00,0x00,0x02,0x00,0xff},10) 
+   serial_stream.write(FFFF00150000000200ff,10) 
   sleep(1);
   serial_stream.DrainWriteBuffer();
 
