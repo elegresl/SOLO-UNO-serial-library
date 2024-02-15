@@ -1,8 +1,5 @@
 /**
- *  @example serial_port_write.cpp
- * 
  *      to compile, execute 'g++ -I/usr/include/libserial testing_serial.cpp -lserial -o testing_serial' in the shell 
- * 
  */
 
 #include </usr/include/libserial/SerialPort.h>
@@ -12,17 +9,9 @@
 
 #include <chrono>
 #include <thread>
-
 #include <sstream>
 
 constexpr const char* const SERIAL_PORT_2 = "/dev/ttyACM0" ;
-
-/**
- * @brief This example reads the contents of a file and writes the entire 
- *        file to the serial port one character at a time. To use this
- *        example, simply utilize TestFile.txt or another file of your
- *        choosing as a command line argument.
- */
 int main()
 {   
     using namespace LibSerial ;
@@ -31,7 +20,6 @@ int main()
 
     try
     {
-        // Open the Serial Port at the desired hardware port.
         serial_port.Open(SERIAL_PORT_2) ;
     }
     catch (const OpenFailed&)
@@ -39,8 +27,6 @@ int main()
         std::cerr << "The serial port did not open correctly." << std::endl ;
         return EXIT_FAILURE ;
     }
-
-
     serial_port.FlushIOBuffers();
     serial_port.FlushInputBuffer();
     serial_port.FlushOutputBuffer();
@@ -129,7 +115,6 @@ int main()
 
         std::string reading;
         serial_port.Read(reading, 10, 5000);
-
 
         std::stringstream ss;
         ss << reading;
