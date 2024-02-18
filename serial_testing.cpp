@@ -85,7 +85,7 @@ void initSolo(){
     catch (const OpenFailed&)
     {
         std::cerr << "The serial port did not open correctly." << std::endl ;
-        return void ;
+        return ;
     }
  
     serial_port.FlushIOBuffers();
