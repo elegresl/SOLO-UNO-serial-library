@@ -11,7 +11,7 @@
 constexpr const char* const SERIAL_PORT_2 = "/dev/ttyACM0" ;
 
 using namespace LibSerial;
-public SerialPort serial_port;
+SerialPort serial_port;
 
 void soloWrite(char addr, char cmd, int data){
 
