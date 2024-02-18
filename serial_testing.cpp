@@ -46,15 +46,15 @@ int main()
 
         std::ofstream outputFile("ascii.txt");
 
-        char initiator = '/0xFF';
-        char address = '/0x00';
-        char command = '/0x00';
-        char data0 = '/0x00';
-        char data1 = '/0x00';
-        char data2 = '/0x00';
-        char data3 = '/0x01';
-        char crc = '/0x00';
-        char ending = '/0xFE';
+        char initiator = 0xFF;
+        char address = 0x00;
+        char command = 0x11;
+        char data0 = 0x00;
+        char data1 = 0x00;
+        char data2 = 0x00;
+        char data3 = 0x01;
+        char crc = 0x00;
+        char ending = 0xFE;
         
         char data_byte[] = {initiator, initiator, address, command, data0, data1, data2, data3, crc, ending};
        
