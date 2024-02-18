@@ -14,8 +14,9 @@ void soloWrite(char addr, char cmd, int data){
     char initiator = 0xFF;
     char address = addr;
     char command = cmd;
-   
-    char* bytes = reinterpret_cast<char*>(&hexValue);
+    int dataIn = data;
+ 
+    char* bytes = reinterpret_cast<char*>(&dataIn);
  
     char data0 = bytes[0];
     char data1 = bytes[1];
@@ -93,7 +94,7 @@ int main()
     
 
     initSolo();
-    soloWrite();
+    soloWrite(0x00,0x15,0x00000001);
 
     std::string reading;
  
