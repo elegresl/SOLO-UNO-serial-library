@@ -53,43 +53,32 @@ int main()
     serial_port.WriteByte(data_byte[0]);
     serial_port.DrainWriteBuffer();
      
-      
     serial_port.WriteByte(data_byte[1]); 
     serial_port.DrainWriteBuffer() ;
-    std::cout << "Second byte written" << std::endl ;
         
-
     serial_port.WriteByte(data_byte[2]);
     serial_port.DrainWriteBuffer() ;
-    std::cout << "Third byte written" << std::endl ;
      
     serial_port.WriteByte(data_byte[3]);
-    serial_port.DrainWriteBuffer() ;
-    std::cout << "4th byte written" << std::endl ;
-        
+    serial_port.DrainWriteBuffer() ;    
 
     serial_port.WriteByte(data_byte[4]);
     serial_port.DrainWriteBuffer() ;
-    std::cout << "5th byte written" << std::endl ;
         
     serial_port.WriteByte(data_byte[5]);
     serial_port.DrainWriteBuffer() ;
-    std::cout << "6th byte written" << std::endl ;
         
     serial_port.WriteByte(data_byte[6]);
     serial_port.DrainWriteBuffer() ;
-    std::cout << "7th byte written" << std::endl ;
         
     serial_port.WriteByte(data_byte[7]);
     serial_port.DrainWriteBuffer() ;
-    std::cout << "8th byte written" << std::endl;
              
     serial_port.WriteByte(data_byte[8]);
     serial_port.DrainWriteBuffer() ;
      
     serial_port.WriteByte(data_byte[9]);
     serial_port.DrainWriteBuffer() ;
-    std::cout << "10th byte written" << std::endl;
 
     std::string reading;
  
