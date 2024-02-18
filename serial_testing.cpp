@@ -9,7 +9,10 @@
 #include <sstream>
 
 constexpr const char* const SERIAL_PORT_2 = "/dev/ttyACM0" ;
+
 void soloWrite(char addr, char cmd, int data){
+ 
+    std::ofstream outputFile("serial_log.txt");
  
     char initiator = 0xFF;
     char address = addr;
@@ -58,9 +61,20 @@ void soloWrite(char addr, char cmd, int data){
     serial_port.WriteByte(data_byte[9]);
     serial_port.DrainWriteBuffer() ;
  
+    std::string reading;
+ 
+    serial_port.Read(reading, 10, 5000);
+
+    std::stringstream ss;
+    ss << reading;
+    std::cout << ss.str() << std::endl;
+    
+    outputFile << ss.str();
+    outputFile.close();
+    serial_port.Close();
 }
 
-boolean initSolo(){
+void initSolo(){
    using namespace LibSerial;
     SerialPort serial_port;
  
@@ -84,8 +98,6 @@ boolean initSolo(){
     serial_port.SetParity(Parity::PARITY_NONE) ; 
     serial_port.SetStopBits(StopBits::STOP_BITS_1) ;
 
-    std::ofstream outputFile("serial_log.txt");
-
     std::this_thread::sleep_for(std::chrono::seconds(1));
  
 }
@@ -96,17 +108,6 @@ int main()
     initSolo();
     soloWrite(0x00,0x15,0x00000001);
 
-    std::string reading;
- 
-    serial_port.Read(reading, 10, 5000);
-
-    std::stringstream ss;
-    ss << reading;
-    std::cout << ss.str() << std::endl;
-    
-    outputFile << ss.str();
-    outputFile.close();
-    serial_port.Close();
  
     return EXIT_SUCCESS ;
 }
