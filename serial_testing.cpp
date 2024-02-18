@@ -121,7 +121,7 @@ int main()
         data_byte = 0xFE;
         serial_port.WriteByte(data_byte);
         serial_port.DrainWriteBuffer() ;
-        std::cout << "10th byte written" << std::endl;'
+        std::cout << "10th byte written" << std::endl;
         std::this_thread::sleep_for(std::chrono::seconds(1));
 
         std::string reading;
