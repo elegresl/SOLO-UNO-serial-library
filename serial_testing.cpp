@@ -56,7 +56,7 @@ int main()
         char crc = 0x00;
         char ending = 0xFE;
         
-        char data_string[] = {initiator, initiator, address, rw, data0, data1, data2, data3, crc, ending};
+        char data_byte[] = {initiator, initiator, address, rw, data0, data1, data2, data3, crc, ending};
        
         std::this_thread::sleep_for(std::chrono::seconds(1));
     
