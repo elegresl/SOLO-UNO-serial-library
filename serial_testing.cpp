@@ -11,6 +11,16 @@
 constexpr const char* const SERIAL_PORT_2 = "/dev/ttyACM0" ;
 
 void soloWrite(char addr, char cmd, int data){
+
+     try
+    {
+        serial_port.Open(SERIAL_PORT_2) ;
+    }
+    catch (const OpenFailed&)
+    {
+        std::cerr << "The serial port did not open correctly." << std::endl ;
+        return ;
+    }
  
     std::ofstream outputFile("serial_log.txt");
  
@@ -77,16 +87,6 @@ void soloWrite(char addr, char cmd, int data){
 void initSolo(){
    using namespace LibSerial;
     public SerialPort serial_port;
- 
-    try
-    {
-        serial_port.Open(SERIAL_PORT_2) ;
-    }
-    catch (const OpenFailed&)
-    {
-        std::cerr << "The serial port did not open correctly." << std::endl ;
-        return ;
-    }
  
     serial_port.FlushIOBuffers();
     serial_port.FlushInputBuffer();
