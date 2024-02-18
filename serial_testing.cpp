@@ -1,4 +1,13 @@
- //to compile, execute 'g++ -I/usr/include/libserial testing_serial.cpp -lserial -o testing_serial' in the shell 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//
+//to compile, execute 'g++ -I/usr/include/libserial testing_serial.cpp -lserial -o testing_serial' in the shell 
+//
+//
+// THIS PROGRAM ONLY HAS AN ISSUE WITH SPLITTING THE 4 BYTE WORD INTO 4 ONE BYTE WORDS!!!!!!!!!!!
+//
+//
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include </usr/include/libserial/SerialPort.h>
 #include <cstdlib>
@@ -26,12 +35,12 @@ void soloWrite(char addr, char cmd, int data){
     char command = cmd;
     int dataIn = data;
  
-    char* bytes = reinterpret_cast<char*>(&dataIn);
+    //char* bytes = reinterpret_cast<char*>(&dataIn);
  
-    char data0 = bytes[0];
-    char data1 = bytes[1];
-    char data2 = bytes[2];
-    char data3 = bytes[3];
+    char data0 = static_cast<char>((dataIn >> 24) & 0xFF);
+    char data1 = static_cast<char>((dataIn >> 16) & 0xFF);
+    char data2 = static_cast<char>((dataIn >> 8) & 0xFF);
+    char data3 = static_cast<char>((dataIn & 0xFF);
     
     char crc = 0x00;
     char ending = 0xFE;
