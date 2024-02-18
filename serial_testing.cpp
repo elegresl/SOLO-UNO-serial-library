@@ -24,6 +24,10 @@ void soloWrite(char addr, char cmd, int data){
         std::cerr << "The serial port did not open correctly." << std::endl ;
         return ;
     }
+
+    serial_port.FlushIOBuffers();
+    serial_port.FlushInputBuffer();
+    serial_port.FlushOutputBuffer();
  
     std::ofstream outputFile("serial_log.txt");
  
@@ -88,10 +92,6 @@ void soloWrite(char addr, char cmd, int data){
 }
 
 void initSolo(){
- 
-    serial_port.FlushIOBuffers();
-    serial_port.FlushInputBuffer();
-    serial_port.FlushOutputBuffer();
 
     serial_port.SetBaudRate(BaudRate::BAUD_115200) ;
     serial_port.SetCharacterSize(CharacterSize::CHAR_SIZE_8) ;
