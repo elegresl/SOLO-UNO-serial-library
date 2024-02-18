@@ -53,7 +53,7 @@ int main()
 
         //char data_string[] = {'\xFF', '\xFF', '\x00','\x15','\x00','\x00','\x00','\x01','\x00','\xFE'};
         //char data_byte = data_string[0];
-        std::this_thread::sleep_for(std::chrono::microseconds(1500));
+        std::this_thread::sleep_for(std::chrono::seconds(1));
     
         char data_byte = 0xFF;
         serial_port.WriteByte(data_byte);
@@ -75,7 +75,7 @@ int main()
          std::cout << "Third byte written" << std::endl ;
 
           //data_byte = data_string[3];
-          data_byte = 0x15;
+          data_byte = 0x81;
           serial_port.WriteByte(data_byte);
         //serial_port.FlushOutputBuffer();
          serial_port.DrainWriteBuffer() ;
@@ -103,7 +103,7 @@ int main()
         std::cout << "7th byte written" << std::endl ;
 
           //data_byte = data_string[7];
-          data_byte = 0x02;
+          data_byte = 0x00;
           serial_port.WriteByte(data_byte);
         //serial_port.FlushOutputBuffer();
          serial_port.DrainWriteBuffer() ;
