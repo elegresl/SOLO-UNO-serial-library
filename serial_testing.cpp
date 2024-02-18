@@ -10,6 +10,9 @@
 
 constexpr const char* const SERIAL_PORT_2 = "/dev/ttyACM0" ;
 
+using namespace LibSerial;
+public SerialPort serial_port;
+
 void soloWrite(char addr, char cmd, int data){
 
      try
@@ -85,8 +88,6 @@ void soloWrite(char addr, char cmd, int data){
 }
 
 void initSolo(){
-   using namespace LibSerial;
-    public SerialPort serial_port;
  
     serial_port.FlushIOBuffers();
     serial_port.FlushInputBuffer();
