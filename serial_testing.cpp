@@ -50,7 +50,7 @@ int main()
         char address = '/0x00';
         char command = '/0x00';
         char data0 = '/0x00';
-        char data1 = '/0x00/;
+        char data1 = '/0x00';
         char data2 = '/0x00';
         char data3 = '/0x01';
         char crc = '/0x00';
