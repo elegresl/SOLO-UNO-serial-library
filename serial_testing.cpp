@@ -40,7 +40,7 @@ void soloWrite(char addr, char cmd, int data){
     char data0 = static_cast<char>((dataIn >> 24) & 0xFF);
     char data1 = static_cast<char>((dataIn >> 16) & 0xFF);
     char data2 = static_cast<char>((dataIn >> 8) & 0xFF);
-    char data3 = static_cast<char>((dataIn & 0xFF);
+    char data3 = static_cast<char>((dataIn & 0xFF));
     
     char crc = 0x00;
     char ending = 0xFE;
