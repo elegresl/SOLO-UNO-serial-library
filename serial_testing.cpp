@@ -76,7 +76,7 @@ void soloWrite(char addr, char cmd, int data){
 
 void initSolo(){
    using namespace LibSerial;
-    SerialPort serial_port;
+    public SerialPort serial_port;
  
     try
     {
