@@ -15,16 +15,6 @@ SerialPort serial_port;
 
 void soloWrite(char addr, char cmd, int data){
 
-     try
-    {
-        serial_port.Open(SERIAL_PORT_2) ;
-    }
-    catch (const OpenFailed&)
-    {
-        std::cerr << "The serial port did not open correctly." << std::endl ;
-        return ;
-    }
-
     serial_port.FlushIOBuffers();
     serial_port.FlushInputBuffer();
     serial_port.FlushOutputBuffer();
@@ -93,6 +83,16 @@ void soloWrite(char addr, char cmd, int data){
 
 void initSolo(){
 
+     try
+    {
+        serial_port.Open(SERIAL_PORT_2) ;
+    }
+    catch (const OpenFailed&)
+    {
+        std::cerr << "The serial port did not open correctly." << std::endl ;
+        return ;
+    }
+ 
     serial_port.SetBaudRate(BaudRate::BAUD_115200) ;
     serial_port.SetCharacterSize(CharacterSize::CHAR_SIZE_8) ;
     serial_port.SetFlowControl(FlowControl::FLOW_CONTROL_NONE) ;
@@ -100,7 +100,7 @@ void initSolo(){
     serial_port.SetStopBits(StopBits::STOP_BITS_1) ;
 
     std::this_thread::sleep_for(std::chrono::seconds(1));
- 
+     
 }
 int main()
 {   
