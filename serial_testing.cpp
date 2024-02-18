@@ -1,12 +1,9 @@
-/**
- *      to compile, execute 'g++ -I/usr/include/libserial testing_serial.cpp -lserial -o testing_serial' in the shell 
- */
+ //to compile, execute 'g++ -I/usr/include/libserial testing_serial.cpp -lserial -o testing_serial' in the shell 
 
 #include </usr/include/libserial/SerialPort.h>
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
-
 #include <chrono>
 #include <thread>
 #include <sstream>
@@ -15,9 +12,7 @@ constexpr const char* const SERIAL_PORT_2 = "/dev/ttyACM0" ;
 int main()
 {   
     using namespace LibSerial ;
-    // Instantiate a SerialPort object.
     SerialPort serial_port ;
-
     try
     {
         serial_port.Open(SERIAL_PORT_2) ;
@@ -51,74 +46,74 @@ int main()
 
         std::ofstream outputFile("ascii.txt");
 
-        //char data_string[] = {'\xFF', '\xFF', '\x00','\x15','\x00','\x00','\x00','\x01','\x00','\xFE'};
-        //char data_byte = data_string[0];
+        char data_string[] = {'\xFF', '\xFF', '\x00','\x15','\x00','\x00','\x00','\x01','\x00','\xFE'};
+        char data_byte = data_string[0];
         std::this_thread::sleep_for(std::chrono::seconds(1));
     
-        char data_byte = 0xFF;
+        //char data_byte = 0xFF;
         serial_port.WriteByte(data_byte);
         serial_port.DrainWriteBuffer();
         std::cout << "First byte written." << std::endl ;
        
     
-        //data_byte = data_string[1];
-        data_byte = 0xFF;
+        data_byte = data_string[1];
+        //data_byte = 0xFF;
         serial_port.WriteByte(data_byte); 
         serial_port.DrainWriteBuffer() ;
         std::cout << "Second byte written" << std::endl ;
         
 
-          //data_byte = data_string[2];
-          data_byte = 0x00;
+          data_byte = data_string[2];
+          //data_byte = 0x00;
           serial_port.WriteByte(data_byte);
         serial_port.DrainWriteBuffer() ;
          std::cout << "Third byte written" << std::endl ;
        
 
-          //data_byte = data_string[3];
-          data_byte = 0x15;
+          data_byte = data_string[3];
+          //data_byte = 0x15;
           serial_port.WriteByte(data_byte);
          serial_port.DrainWriteBuffer() ;
          std::cout << "4th byte written" << std::endl ;
         
 
-        //data_byte = data_string[4];
-        data_byte = 0x00;
+        data_byte = data_string[4];
+        //data_byte = 0x00;
         serial_port.WriteByte(data_byte);
         serial_port.DrainWriteBuffer() ;
         std::cout << "5th byte written" << std::endl ;
         
 
-          //data_byte = data_string[5];
-          data_byte = 0x00;
+          data_byte = data_string[5];
+          //data_byte = 0x00;
           serial_port.WriteByte(data_byte);
          serial_port.DrainWriteBuffer() ;
          std::cout << "6th byte written" << std::endl ;
         
 
-          //data_byte = data_string[6];
-          data_byte = 0x00;
+          data_byte = data_string[6];
+          //data_byte = 0x00;
           serial_port.WriteByte(data_byte);
          serial_port.DrainWriteBuffer() ;
         std::cout << "7th byte written" << std::endl ;
         
 
-          //data_byte = data_string[7];
-          data_byte = 0x02;
+          data_byte = data_string[7];
+          //data_byte = 0x02;
           serial_port.WriteByte(data_byte);
          serial_port.DrainWriteBuffer() ;
          std::cout << "8th byte written" << std::endl;
         
 
-         //data_byte = data_string[8];
-         data_byte = 0x00;
+         data_byte = data_string[8];
+         //data_byte = 0x00;
          serial_port.WriteByte(data_byte);
          serial_port.DrainWriteBuffer() ;
          std::cout << "9th byte written" << std::endl;
         
 
-        //data_byte = data_string[9];
-        data_byte = 0xFE;
+        data_byte = data_string[9];
+        //data_byte = 0xFE;
         serial_port.WriteByte(data_byte);
         serial_port.DrainWriteBuffer() ;
         std::cout << "10th byte written" << std::endl;
