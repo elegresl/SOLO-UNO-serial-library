@@ -53,7 +53,7 @@ int main()
 
         //char data_string[] = {'\xFF', '\xFF', '\x00','\x15','\x00','\x00','\x00','\x01','\x00','\xFE'};
         //char data_byte = data_string[0];
-        sleep(seconds(3));
+        std::this_thread::sleep_for(std::chrono::seconds(5));
     
         char data_byte = 0xFF;
         serial_port.WriteByte(data_byte);
