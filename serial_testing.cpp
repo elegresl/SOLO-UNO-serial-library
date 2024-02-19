@@ -222,7 +222,7 @@ int soloReadSpeed(char addr){
     outputFile.close();
     serial_port.Close();
 
-    return reading;
+    return std::stoi(reading);
 
 }
 void initSolo(){
