@@ -183,7 +183,7 @@ int main()
     
 
     initSolo();
-    soloRead(0x00,0x81);
+    soloRead(0x00,0xA2);
 
  
     return EXIT_SUCCESS ;
