@@ -28,7 +28,7 @@ void soloWrite(char addr, char cmd, int data){
     serial_port.FlushInputBuffer();
     serial_port.FlushOutputBuffer();
  
-    std::ofstream outputFile("serial_log.txt");
+    std::ofstream outputFile("serial_read.txt");
  
     char initiator = 0xFF;
     char address = addr;
