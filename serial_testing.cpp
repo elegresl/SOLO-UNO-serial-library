@@ -212,9 +212,14 @@ int soloReadSpeed(char addr){
     std::string(1, data_byte[6]) + std::string(1, data_byte[7]) + std::string(1, data_byte[8]) + std::string(1, data_byte[9]);
  
     serial_port.Read(reading, 10, 5000);
-
+    
+    char d0 = reading[4];
+    char d1 = reading[5];
+    char d2 = reading[6];
+    char d3 = reading[7];
+    
     std::stringstream ss;
-    ss << reading;
+    ss << reading[4] + reading[5] + reading[6] + reading[7] +;
     std::cout << ss.str() << std::endl;
 
     
