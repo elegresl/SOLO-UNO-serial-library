@@ -35,8 +35,6 @@ void soloWrite(char addr, char cmd, int data){
     char command = cmd;
     int dataIn = data;
  
-    //char* bytes = reinterpret_cast<char*>(&dataIn);
- 
     char data0 = static_cast<char>((dataIn >> 24) & 0xFF);
     char data1 = static_cast<char>((dataIn >> 16) & 0xFF);
     char data2 = static_cast<char>((dataIn >> 8) & 0xFF);
@@ -48,43 +46,33 @@ void soloWrite(char addr, char cmd, int data){
     char data_byte[] = {initiator, initiator, address, command, data0, data1, data2, data3, crc, ending};
     
     serial_port.WriteByte(data_byte[0]);
-    std::cout << std::hex << static_cast<int>(data_byte[0] & 0xFF) << std::endl;
     serial_port.DrainWriteBuffer();
      
     serial_port.WriteByte(data_byte[1]); 
-    std::cout << std::hex << static_cast<int>(data_byte[1] & 0xFF) << std::endl;
     serial_port.DrainWriteBuffer() ;
         
     serial_port.WriteByte(data_byte[2]);
-    std::cout << std::hex << static_cast<int>(data_byte[2] & 0xFF) << std::endl;
     serial_port.DrainWriteBuffer() ;
      
     serial_port.WriteByte(data_byte[3]);
-    std::cout << std::hex << static_cast<int>(data_byte[3] & 0xFF) << std::endl;
     serial_port.DrainWriteBuffer() ;    
 
     serial_port.WriteByte(data_byte[4]);
-    std::cout << std::hex << static_cast<int>(data_byte[4] & 0xFF) << std::endl;
     serial_port.DrainWriteBuffer() ;
         
     serial_port.WriteByte(data_byte[5]);
-    std::cout << std::hex << static_cast<int>(data_byte[5] & 0xFF) << std::endl;
     serial_port.DrainWriteBuffer() ;
         
     serial_port.WriteByte(data_byte[6]);
-    std::cout << std::hex << static_cast<int>(data_byte[6] & 0xFF) << std::endl;
     serial_port.DrainWriteBuffer() ;
         
     serial_port.WriteByte(data_byte[7]);
-    std::cout << std::hex << static_cast<int>(data_byte[7] & 0xFF) << std::endl;
     serial_port.DrainWriteBuffer() ;
              
     serial_port.WriteByte(data_byte[8]);
-    std::cout << std::hex << static_cast<int>(data_byte[8] & 0xFF) << std::endl;
     serial_port.DrainWriteBuffer() ;
      
     serial_port.WriteByte(data_byte[9]);
-    std::cout << std::hex << static_cast<int>(data_byte[9] & 0xFF) << std::endl;
     serial_port.DrainWriteBuffer() ;
  
     std::string reading;
@@ -98,6 +86,10 @@ void soloWrite(char addr, char cmd, int data){
     outputFile << ss.str();
     outputFile.close();
     serial_port.Close();
+
+    if(reading != dataIn){
+        std::cout << "SOLO UNO WRITE ERROR" << std::endl;
+    }
 }
 
 void initSolo(){
