@@ -108,8 +108,9 @@ void soloRead(char addr, char cmd){
     
     char crc = 0x00;
     char ending = 0xFE;
-        
-    char data_byte[] = {initiator, initiator, address, command, crc, crc, crc, crc, crc, ending};
+    char data = 0x00;
+
+    char data_byte[] = {initiator, initiator, address, command, data, data, data, data, crc, ending};
     
     serial_port.WriteByte(data_byte[0]);
     serial_port.DrainWriteBuffer();
@@ -157,6 +158,73 @@ void soloRead(char addr, char cmd){
     serial_port.Close();
 
 }
+
+int soloReadSpeed(char addr){
+
+    serial_port.FlushIOBuffers();
+    serial_port.FlushInputBuffer();
+    serial_port.FlushOutputBuffer();
+ 
+    std::ofstream outputFile("serial_read.txt");
+ 
+    char initiator = 0xFF;
+    char address = addr;
+    char command = 0x96;
+    
+    char crc = 0x00;
+    char ending = 0xFE;
+    char data = 0x00;
+
+    char data_byte[] = {initiator, initiator, address, command, data, data, data, data, crc, ending};
+    
+    serial_port.WriteByte(data_byte[0]);
+    serial_port.DrainWriteBuffer();
+     
+    serial_port.WriteByte(data_byte[1]); 
+    serial_port.DrainWriteBuffer() ;
+        
+    serial_port.WriteByte(data_byte[2]);
+    serial_port.DrainWriteBuffer() ;
+     
+    serial_port.WriteByte(data_byte[3]);
+    serial_port.DrainWriteBuffer() ;    
+
+    serial_port.WriteByte(data_byte[4]);
+    serial_port.DrainWriteBuffer() ;
+        
+    serial_port.WriteByte(data_byte[5]);
+    serial_port.DrainWriteBuffer() ;
+        
+    serial_port.WriteByte(data_byte[6]);
+    serial_port.DrainWriteBuffer() ;
+        
+    serial_port.WriteByte(data_byte[7]);
+    serial_port.DrainWriteBuffer() ;
+             
+    serial_port.WriteByte(data_byte[8]);
+    serial_port.DrainWriteBuffer() ;
+     
+    serial_port.WriteByte(data_byte[9]);
+    serial_port.DrainWriteBuffer() ;
+ 
+    std::string reading;
+    std::string writtenValue = std::string(1, data_byte[0]) + std::string(1, data_byte[1]) + std::string(1, data_byte[2]) + std::string(1, data_byte[3]) + std::string(1, data_byte[4]) + std::string(1, data_byte[5]) +
+    std::string(1, data_byte[6]) + std::string(1, data_byte[7]) + std::string(1, data_byte[8]) + std::string(1, data_byte[9]);
+ 
+    serial_port.Read(reading, 10, 5000);
+
+    std::stringstream ss;
+    ss << reading;
+    std::cout << ss.str() << std::endl;
+
+    
+    outputFile << ss.str();
+    outputFile.close();
+    serial_port.Close();
+
+    return reading;
+
+}
 void initSolo(){
 
      try
@@ -183,7 +251,7 @@ int main()
     
 
     initSolo();
-    soloRead(0x00,0xA2);
+    soloReadSpeed(0x00);
 
  
     return EXIT_SUCCESS ;
