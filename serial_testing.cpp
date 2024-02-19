@@ -121,7 +121,7 @@ int main()
     
 
     initSolo();
-    soloWrite(0x00,0x15,0x00000001);
+    soloWrite(0x00,0x15,0xFFFFFFFF);
 
  
     return EXIT_SUCCESS ;
