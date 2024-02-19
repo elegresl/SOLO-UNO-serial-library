@@ -225,14 +225,14 @@ int soloReadSpeed(char addr){
     ss1 << reading;
     ss << reading[4] + reading[5] + reading[6] + reading[7];
     
-    std::cout << ss.str() << std::endl;
+    std::cout << ss1.str() << std::endl;
 
-    
-    outputFile << ss.str();
-    outputFile1 << ss1.str();
+    outputFile << ss1.str();
+    outputFile1 << ss.str();
     
     outputFile.close();
     outputFile1.close();
+    
     serial_port.Close();
 
     return 1;
