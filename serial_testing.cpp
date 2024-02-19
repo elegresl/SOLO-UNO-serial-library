@@ -29,7 +29,6 @@ void soloWrite(char addr, char cmd, int data){
     serial_port.FlushOutputBuffer();
  
     std::ofstream outputFile("speed_read_hex.txt");
-    std::ofstream outputFile1("speed_read_decimal.txt");
  
     char initiator = 0xFF;
     char address = addr;
@@ -167,6 +166,7 @@ int soloReadSpeed(char addr){
     serial_port.FlushOutputBuffer();
  
     std::ofstream outputFile("serial_read.txt");
+    std::ofstream outputFile1("speed_read_decimal.txt");
  
     char initiator = 0xFF;
     char address = addr;
