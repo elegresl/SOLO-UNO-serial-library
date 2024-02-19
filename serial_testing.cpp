@@ -76,18 +76,20 @@ void soloWrite(char addr, char cmd, int data){
     serial_port.DrainWriteBuffer() ;
  
     std::string reading;
+    std::string writtenValue = data_byte[0] + data_byte[1] + data_byte[2] + data_byte[3] + data_byte[4] + data_byte[5] + data_byte[6] + data_byte[7] + data_byte[8] + data_byte[9];
  
     serial_port.Read(reading, 10, 5000);
 
     std::stringstream ss;
     ss << reading;
     std::cout << ss.str() << std::endl;
+
     
     outputFile << ss.str();
     outputFile.close();
     serial_port.Close();
 
-    if(reading != dataIn){
+    if(reading != writtenValue){
         std::cout << "SOLO UNO WRITE ERROR" << std::endl;
     }
 }
