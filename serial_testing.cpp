@@ -219,7 +219,7 @@ int soloReadSpeed(char addr){
     char d3 = reading[7];
     
     std::stringstream ss;
-    ss << reading[4] + reading[5] + reading[6] + reading[7] +;
+    ss << reading[4] + reading[5] + reading[6] + reading[7];
     std::cout << ss.str() << std::endl;
 
     
