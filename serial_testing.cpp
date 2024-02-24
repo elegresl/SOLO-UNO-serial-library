@@ -166,7 +166,7 @@ private:
         //         return;
         //     }
         serial_port.Open(port_name);    
-        }
+        
 
         serial_port.SetBaudRate(LibSerial::BaudRate::BAUD_115200);
         serial_port.SetCharacterSize(LibSerial::CharacterSize::CHAR_SIZE_8);
