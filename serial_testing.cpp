@@ -165,7 +165,7 @@ private:
                  std::cerr << "The serial port did not open correctly." << std::endl;
                  return;
              }    
-        
+         }
         serial_port.SetBaudRate(LibSerial::BaudRate::BAUD_115200);
         serial_port.SetCharacterSize(LibSerial::CharacterSize::CHAR_SIZE_8);
         serial_port.SetFlowControl(LibSerial::FlowControl::FLOW_CONTROL_NONE);
