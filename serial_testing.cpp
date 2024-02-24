@@ -159,8 +159,13 @@ private:
         try {
             serial_port.Open(port_name);
         } catch (const LibSerial::OpenFailed&) {
-            std::cerr << "The serial port did not open correctly." << std::endl;
-            return;
+            try{
+                serial_port.Open("/dev/ttyACM0"");
+            } catch(const LibSerial::OpenFailed&){
+                std::cerr << "The serial port did not open correctly." << std::endl;
+                return;
+            }
+            
         }
 
         serial_port.SetBaudRate(LibSerial::BaudRate::BAUD_115200);
