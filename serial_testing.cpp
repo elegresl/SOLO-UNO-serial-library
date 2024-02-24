@@ -160,7 +160,7 @@ private:
             serial_port.Open(port_name);
         } catch (const LibSerial::OpenFailed&) {
             try{
-                serial_port.Open("/dev/ttyACM0");
+                serial_port.Open("/dev/ttyACM1");
             } catch(const LibSerial::OpenFailed&){
                 std::cerr << "The serial port did not open correctly." << std::endl;
                 return;
