@@ -156,18 +156,16 @@ public:
 
 private:
     void initSolo() {
-        // try {
-        //     serial_port.Open(port_name);
-        // } catch (const LibSerial::OpenFailed&) {
-        //     try{
-        //         serial_port.Open("/dev/ttyACM1");
-        //     } catch(const LibSerial::OpenFailed&){
-        //         std::cerr << "The serial port did not open correctly." << std::endl;
-        //         return;
-        //     }
-        serial_port.Open(port_name);    
+         try {
+             serial_port.Open(port_name);
+         } catch (const LibSerial::OpenFailed&) {
+             try{
+                 serial_port.Open("/dev/ttyACM1");
+             } catch(const LibSerial::OpenFailed&){
+                 std::cerr << "The serial port did not open correctly." << std::endl;
+                 return;
+             }    
         
-
         serial_port.SetBaudRate(LibSerial::BaudRate::BAUD_115200);
         serial_port.SetCharacterSize(LibSerial::CharacterSize::CHAR_SIZE_8);
         serial_port.SetFlowControl(LibSerial::FlowControl::FLOW_CONTROL_NONE);
