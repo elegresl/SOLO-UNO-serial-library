@@ -158,16 +158,16 @@ private:
     void initSolo() {
         try {
             serial_port.Open(port_name);
-        } catch (const OpenFailed&) {
+        } catch (const LibSerial::OpenFailed&) {
             std::cerr << "The serial port did not open correctly." << std::endl;
             return;
         }
 
-        serial_port.SetBaudRate(BaudRate::BAUD_115200);
-        serial_port.SetCharacterSize(CharacterSize::CHAR_SIZE_8);
-        serial_port.SetFlowControl(FlowControl::FLOW_CONTROL_NONE);
-        serial_port.SetParity(Parity::PARITY_NONE);
-        serial_port.SetStopBits(StopBits::STOP_BITS_1);
+        serial_port.SetBaudRate(LibSerial::BaudRate::BAUD_115200);
+        serial_port.SetCharacterSize(LibSerial::CharacterSize::CHAR_SIZE_8);
+        serial_port.SetFlowControl(LibSerial::FlowControl::FLOW_CONTROL_NONE);
+        serial_port.SetParity(LibSerial::Parity::PARITY_NONE);
+        serial_port.SetStopBits(LibSerial::StopBits::STOP_BITS_1);
 
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
