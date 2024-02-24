@@ -1,10 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //
-//to compile, execute 'g++ -I/usr/include/libserial testing_serial.cpp -lserial -o testing_serial' in the shell 
-//
-//
-// THIS PROGRAM ONLY HAS AN ISSUE WITH SPLITTING THE 4 BYTE WORD INTO 4 ONE BYTE WORDS!!!!!!!!!!! WRONG OUTPUT!!!
+//to compile, execute 'g++ -I/usr/include/libserial serial_testing.cpp -lserial -o testing_serial' in the shell 
 //
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,35 +42,11 @@ void soloWrite(char addr, char cmd, int data){
         
     char data_byte[] = {initiator, initiator, address, command, data0, data1, data2, data3, crc, ending};
     
-    serial_port.WriteByte(data_byte[0]);
-    serial_port.DrainWriteBuffer();
-     
-    serial_port.WriteByte(data_byte[1]); 
-    serial_port.DrainWriteBuffer() ;
-        
-    serial_port.WriteByte(data_byte[2]);
-    serial_port.DrainWriteBuffer() ;
-     
-    serial_port.WriteByte(data_byte[3]);
-    serial_port.DrainWriteBuffer() ;    
-
-    serial_port.WriteByte(data_byte[4]);
-    serial_port.DrainWriteBuffer() ;
-        
-    serial_port.WriteByte(data_byte[5]);
-    serial_port.DrainWriteBuffer() ;
-        
-    serial_port.WriteByte(data_byte[6]);
-    serial_port.DrainWriteBuffer() ;
-        
-    serial_port.WriteByte(data_byte[7]);
-    serial_port.DrainWriteBuffer() ;
-             
-    serial_port.WriteByte(data_byte[8]);
-    serial_port.DrainWriteBuffer() ;
-     
-    serial_port.WriteByte(data_byte[9]);
-    serial_port.DrainWriteBuffer() ;
+    for(int x = 0; x <10; x++){
+        serial_port.WriteByte(data_byte[x]);
+        serial_port.DrainWriteBuffer();
+    }
+    
  
     std::string reading;
     std::string writtenValue = std::string(1, data_byte[0]) + std::string(1, data_byte[1]) + std::string(1, data_byte[2]) + std::string(1, data_byte[3]) + std::string(1, data_byte[4]) + std::string(1, data_byte[5]) +
@@ -112,35 +85,10 @@ void soloRead(char addr, char cmd){
 
     char data_byte[] = {initiator, initiator, address, command, data, data, data, data, crc, ending};
     
-    serial_port.WriteByte(data_byte[0]);
-    serial_port.DrainWriteBuffer();
-     
-    serial_port.WriteByte(data_byte[1]); 
-    serial_port.DrainWriteBuffer() ;
-        
-    serial_port.WriteByte(data_byte[2]);
-    serial_port.DrainWriteBuffer() ;
-     
-    serial_port.WriteByte(data_byte[3]);
-    serial_port.DrainWriteBuffer() ;    
-
-    serial_port.WriteByte(data_byte[4]);
-    serial_port.DrainWriteBuffer() ;
-        
-    serial_port.WriteByte(data_byte[5]);
-    serial_port.DrainWriteBuffer() ;
-        
-    serial_port.WriteByte(data_byte[6]);
-    serial_port.DrainWriteBuffer() ;
-        
-    serial_port.WriteByte(data_byte[7]);
-    serial_port.DrainWriteBuffer() ;
-             
-    serial_port.WriteByte(data_byte[8]);
-    serial_port.DrainWriteBuffer() ;
-     
-    serial_port.WriteByte(data_byte[9]);
-    serial_port.DrainWriteBuffer() ;
+    for(int x = 0; x <10; x++){
+        serial_port.WriteByte(data_byte[x]);
+        serial_port.DrainWriteBuffer();
+    }
  
     std::string reading;
     std::string writtenValue = std::string(1, data_byte[0]) + std::string(1, data_byte[1]) + std::string(1, data_byte[2]) + std::string(1, data_byte[3]) + std::string(1, data_byte[4]) + std::string(1, data_byte[5]) +
@@ -178,35 +126,12 @@ int soloReadSpeed(char addr){
 
     char data_byte[] = {initiator, initiator, address, command, data, data, data, data, crc, ending};
     
-    serial_port.WriteByte(data_byte[0]);
-    serial_port.DrainWriteBuffer();
-     
-    serial_port.WriteByte(data_byte[1]); 
-    serial_port.DrainWriteBuffer() ;
-        
-    serial_port.WriteByte(data_byte[2]);
-    serial_port.DrainWriteBuffer() ;
-     
-    serial_port.WriteByte(data_byte[3]);
-    serial_port.DrainWriteBuffer() ;    
-
-    serial_port.WriteByte(data_byte[4]);
-    serial_port.DrainWriteBuffer() ;
-        
-    serial_port.WriteByte(data_byte[5]);
-    serial_port.DrainWriteBuffer() ;
-        
-    serial_port.WriteByte(data_byte[6]);
-    serial_port.DrainWriteBuffer() ;
-        
-    serial_port.WriteByte(data_byte[7]);
-    serial_port.DrainWriteBuffer() ;
-             
-    serial_port.WriteByte(data_byte[8]);
-    serial_port.DrainWriteBuffer() ;
-     
-    serial_port.WriteByte(data_byte[9]);
-    serial_port.DrainWriteBuffer() ;
+    
+    for(int x = 0; x <10; x++){
+        serial_port.WriteByte(data_byte[x]);
+        serial_port.DrainWriteBuffer();
+    }
+    
  
     std::string reading;
     std::string writtenValue = std::string(1, data_byte[0]) + std::string(1, data_byte[1]) + std::string(1, data_byte[2]) + std::string(1, data_byte[3]) + std::string(1, data_byte[4]) + std::string(1, data_byte[5]) +
@@ -261,11 +186,9 @@ void initSolo(){
 }
 int main()
 {   
-    
 
     initSolo();
     soloReadSpeed(0x00);
-
  
     return EXIT_SUCCESS ;
 }
