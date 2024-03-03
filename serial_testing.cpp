@@ -6,14 +6,19 @@
 #include <thread>
 #include <sstream>
 
+#define SPEED_REFERENCE 0x05
+#define TORQUE_REFERENCE 0x04
+#define SPEED_FEEDBACK 0x96
+
 class SoloUno {
 public:
-    SoloUno(const std::string& port_name) : serial_port(port_name) {
-        this->port_name = port_name;
+    SoloUno(char add) {
+
+        this->address = add;
         initSolo();
     }
 
-    void soloWrite(char addr, char cmd, int data) {
+    void soloWrite(char cmd, int data) {
         serial_port.FlushIOBuffers();
         serial_port.FlushInputBuffer();
         serial_port.FlushOutputBuffer();
@@ -21,7 +26,7 @@ public:
         std::ofstream outputFile("speed_read_hex.txt");
 
         char initiator = 0xFF;
-        char address = addr;
+        char address = this->address;
         char command = cmd;
         int dataIn = data;
 
@@ -61,7 +66,7 @@ public:
         }
     }
 
-    void soloRead(char addr, char cmd) {
+    void soloRead(char cmd) {
         serial_port.FlushIOBuffers();
         serial_port.FlushInputBuffer();
         serial_port.FlushOutputBuffer();
@@ -69,7 +74,7 @@ public:
         std::ofstream outputFile("serial_read.txt");
 
         char initiator = 0xFF;
-        char address = addr;
+        char address = this->address;
         char command = cmd;
 
         char crc = 0x00;
@@ -100,61 +105,34 @@ public:
         serial_port.Close();
     }
 
-    int soloReadSpeed(char addr) {
-        serial_port.FlushIOBuffers();
-        serial_port.FlushInputBuffer();
-        serial_port.FlushOutputBuffer();
+    double readSpeed() {
+        
+        double speed = soloRead(SPEED_FEEDBACK);
+        
 
-        std::ofstream outputFile("serial_read.txt");
-        std::ofstream outputFile1("speed_read_decimal.txt");
-
-        char initiator = 0xFF;
-        char address = addr;
-        char command = 0x96;
-
-        char crc = 0x00;
-        char ending = 0xFE;
-        char data = 0x00;
-
-        char data_byte[] = {initiator, initiator, address, command, data, data, data, data, crc, ending};
-
-        for (int x = 0; x < 10; x++) {
-            serial_port.WriteByte(data_byte[x]);
-            serial_port.DrainWriteBuffer();
-        }
-
-        std::string reading;
-        std::string writtenValue = std::string(1, data_byte[0]) + std::string(1, data_byte[1]) + std::string(1, data_byte[2]) +
-                                   std::string(1, data_byte[3]) + std::string(1, data_byte[4]) + std::string(1, data_byte[5]) +
-                                   std::string(1, data_byte[6]) + std::string(1, data_byte[7]) + std::string(1, data_byte[8]) +
-                                   std::string(1, data_byte[9]);
-
-        serial_port.Read(reading, 10, 5000);
-
-        char d0 = reading[4];
-        char d1 = reading[5];
-        char d2 = reading[6];
-        char d3 = reading[7];
-
-        std::stringstream ss;
-        std::stringstream ss1;
-
-        ss1 << reading;
-        ss << reading[4] + reading[5] + reading[6] + reading[7];
-
-        std::cout << ss1.str() << std::endl;
-
-        outputFile << ss1.str();
-        outputFile1 << ss.str();
-
-        outputFile.close();
-        outputFile1.close();
-        serial_port.Close();
-
-        return 1;
+        return speed;
     }
 
+    void end(){
+
+        serial_port.Close();
+
+    }
+    void setTorque(int data){
+
+        int dat = data;
+        soloWrite(TORQUE_REFERENCE, dat);
+
+    }
+
+    void setSpeed(int data){
+        
+        int dat = data;
+        soloWrite(SPEED_REFERENCE, dat);
+
+    }
 private:
+
     void initSolo() {
          try {
              serial_port.Open(port_name);
@@ -174,15 +152,57 @@ private:
 
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
+    double fixedPointToDouble(int data){
+            double result;
+            double den = 131072;
+
+            if(data <= 0x7FFE0000){
+
+                result = data/den;
+
+            }
+            else{
+
+                result = data/den*-1;
+
+            }
+            return result;
+    }
+
+    int doubleToFixedPoint(double data){
+
+        unsigned int result;
+        double mult = 131072;
+
+        if(data >= 0){
+
+            double prod = data*mult;
+            int roundedDown = static_cast<int>(floor(prod));
+            result = roundedDown;
+
+        }
+        if(data < 0){
+
+            double prod = data*mult;
+            unsigned int roundedDown = abs(static_cast<int>(floor(prod)));
+            unsigned int eightBytesF = 0xFFFFFFFF;
+            result = eightBytesF - roundedDown +1;
+        }
+
+        return result;
+    }
 
 private:
     LibSerial::SerialPort serial_port;
     std::string port_name;
+    char address;
 };
 
 int main() {
-    SoloUno solo1("/dev/ttyACM0");
-    solo1.soloReadSpeed(0x00);
+
+    SoloUno solo1(0x00);
+    solo1.readSpeed();
+    solo1.end();
 
     return EXIT_SUCCESS;
 }
