@@ -5,10 +5,14 @@
 #include <chrono>
 #include <thread>
 #include <sstream>
+#include <cmath>
+#include <bitset>
 
 #define SPEED_REFERENCE 0x05
 #define TORQUE_REFERENCE 0x04
 #define SPEED_FEEDBACK 0x96
+#define PORT_NAME "/dev/ttyACM0"
+#define PORT_NAME_2 "/dev/ttyACM1"
 
 class SoloUno {
 public:
@@ -18,12 +22,12 @@ public:
         initSolo();
     }
 
-    void soloWrite(char cmd, int data) {
+    int soloWrite(char cmd, int data) {
         serial_port.FlushIOBuffers();
         serial_port.FlushInputBuffer();
         serial_port.FlushOutputBuffer();
 
-        std::ofstream outputFile("speed_read_hex.txt");
+        std::ofstream outputFile("solo_write.txt");
 
         char initiator = 0xFF;
         char address = this->address;
@@ -59,14 +63,17 @@ public:
 
         outputFile << ss.str();
         outputFile.close();
-        serial_port.Close();
 
         if (reading != writtenValue) {
             std::cout << "SOLO UNO WRITE ERROR" << std::endl;
+            return 1; // Write failure.
+        }
+        else{
+            return 0; // Successful write.
         }
     }
 
-    void soloRead(char cmd) {
+    int soloRead(char cmd) {
         serial_port.FlushIOBuffers();
         serial_port.FlushInputBuffer();
         serial_port.FlushOutputBuffer();
@@ -102,15 +109,20 @@ public:
 
         outputFile << ss.str();
         outputFile.close();
-        serial_port.Close();
+
+        int intReading = 0;
+        for(char c : reading){
+            intReading = (intReading << 8) | static_cast<unsigned char>(c);
+        }
+
+        return intReading;
     }
 
-    double readSpeed() {
+    int readSpeed() {
         
-        double speed = soloRead(SPEED_FEEDBACK);
-        
-
+        int speed = soloRead(SPEED_FEEDBACK);
         return speed;
+
     }
 
     void end(){
@@ -118,16 +130,16 @@ public:
         serial_port.Close();
 
     }
-    void setTorque(int data){
+    void setTorque(double data){
 
-        int dat = data;
+        int dat = doubleToFixedPoint(data); // Torque reference uses fixed point 32-17 for the data.
         soloWrite(TORQUE_REFERENCE, dat);
 
     }
 
-    void setSpeed(int data){
+    void setSpeed(double data){
         
-        int dat = data;
+        int dat = floor(data); // Speed reference uses unsigned int for the data.
         soloWrite(SPEED_REFERENCE, dat);
 
     }
@@ -135,10 +147,12 @@ private:
 
     void initSolo() {
          try {
-             serial_port.Open(port_name);
+             serial_port.Open(PORT_NAME);
+             std::cerr << "Trying to open serial port." << std::endl;
          } catch (const LibSerial::OpenFailed&) {
              try{
-                 serial_port.Open("/dev/ttyACM1");
+                 serial_port.Open(PORT_NAME_2);
+                 std::cerr << "2nd attempt at opening port" << std::endl;
              } catch(const LibSerial::OpenFailed&){
                  std::cerr << "The serial port did not open correctly." << std::endl;
                  return;
@@ -150,9 +164,12 @@ private:
         serial_port.SetParity(LibSerial::Parity::PARITY_NONE);
         serial_port.SetStopBits(LibSerial::StopBits::STOP_BITS_1);
 
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::this_thread::sleep_for(std::chrono::seconds(1)); // Add delay to ensure the port is ready.
+
     }
     double fixedPointToDouble(int data){
+            // This process was built with guidance from the official SOLO UNO communicatio manual.
+
             double result;
             double den = 131072;
 
@@ -170,26 +187,27 @@ private:
     }
 
     int doubleToFixedPoint(double data){
+         // This process was built with guidance from the official SOLO UNO communicatio manual.
+         unsigned int result;
+         double mult = 131072;
 
-        unsigned int result;
-        double mult = 131072;
+         if(data >= 0){
 
-        if(data >= 0){
+             double prod = data*mult;
+             int roundedDown = static_cast<int>(floor(prod));
+             result = roundedDown;
 
-            double prod = data*mult;
-            int roundedDown = static_cast<int>(floor(prod));
-            result = roundedDown;
+         }
+         if(data < 0){
 
-        }
-        if(data < 0){
+             double prod = data*mult;
+             unsigned int roundedDown = abs(static_cast<int>(floor(prod)));
+             unsigned int eightBytesF = 0xFFFFFFFF;
+             result = eightBytesF - roundedDown + 1;
 
-            double prod = data*mult;
-            unsigned int roundedDown = abs(static_cast<int>(floor(prod)));
-            unsigned int eightBytesF = 0xFFFFFFFF;
-            result = eightBytesF - roundedDown +1;
-        }
+         }
 
-        return result;
+         return result;
     }
 
 private:
@@ -201,7 +219,9 @@ private:
 int main() {
 
     SoloUno solo1(0x00);
-    solo1.readSpeed();
+    //int ad = solo1.readSpeed();
+    int ad = solo1.soloRead(0x81);
+    std::cout << ad << std::endl;
     solo1.end();
 
     return EXIT_SUCCESS;
