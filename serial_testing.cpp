@@ -11,8 +11,8 @@
 #define SPEED_REFERENCE 0x05
 #define TORQUE_REFERENCE 0x04
 #define SPEED_FEEDBACK 0x96
-#define PORT_NAME "/dev/ttyACM0"
-#define PORT_NAME_2 "/dev/ttyACM1"
+#define PORT_NAME "/dev/ttyACM0"    // A SOLO UNO typically enumerates as ttyACM0.
+#define PORT_NAME_2 "/dev/ttyACM1"  // A SOLO UNO may enumerate as ttyACM1 if a solo uno is already connected.
 
 class SoloUno {
 public:
@@ -55,7 +55,7 @@ public:
                                    std::string(1, data_byte[6]) + std::string(1, data_byte[7]) + std::string(1, data_byte[8]) +
                                    std::string(1, data_byte[9]);
 
-        serial_port.Read(reading, 10, 5000);
+        serial_port.Read(reading, 10, 50);
 
         std::stringstream ss;
         ss << reading;
@@ -78,7 +78,7 @@ public:
         serial_port.FlushInputBuffer();
         serial_port.FlushOutputBuffer();
 
-        std::ofstream outputFile("serial_read.txt");
+        std::ofstream outputFile("solo_read.txt");
 
         char initiator = 0xFF;
         char address = this->address;
@@ -96,31 +96,29 @@ public:
         }
 
         std::string reading;
-        std::string writtenValue = std::string(1, data_byte[0]) + std::string(1, data_byte[1]) + std::string(1, data_byte[2]) +
-                                   std::string(1, data_byte[3]) + std::string(1, data_byte[4]) + std::string(1, data_byte[5]) +
-                                   std::string(1, data_byte[6]) + std::string(1, data_byte[7]) + std::string(1, data_byte[8]) +
-                                   std::string(1, data_byte[9]);
-
-        serial_port.Read(reading, 10, 5000);
+        serial_port.Read(reading, 10, 50);
 
         std::stringstream ss;
         ss << reading;
-        std::cout << ss.str() << std::endl;
+        std::cout << "General read binary data returned data from SOLO: " + ss.str() << std::endl;
 
         outputFile << ss.str();
         outputFile.close();
+
+
 
         int intReading = 0;
         for(char c : reading){
             intReading = (intReading << 8) | static_cast<unsigned char>(c);
         }
-
+        std::cout << "General read returned data from SOLO in int format: " + ss.str() << std::endl;
         return intReading;
     }
 
     int readSpeed() {
         
         int speed = soloRead(SPEED_FEEDBACK);
+        std::cout << "Speed was read as: " + speed << std::endl;
         return speed;
 
     }
@@ -131,8 +129,10 @@ public:
 
     }
     void setTorque(double data){
-
+        int datt = data;
         int dat = doubleToFixedPoint(data); // Torque reference uses fixed point 32-17 for the data.
+        std::cout << "Torque was instructed to be: " + datt << std::endl;
+        std::cout <<  "Which is fixed point: " + dat << std::endl;
         soloWrite(TORQUE_REFERENCE, dat);
 
     }
@@ -140,6 +140,7 @@ public:
     void setSpeed(double data){
         
         int dat = floor(data); // Speed reference uses unsigned int for the data.
+        std::cout << "Speed was instructed to be: " + dat << std::endl;
         soloWrite(SPEED_REFERENCE, dat);
 
     }
@@ -148,11 +149,9 @@ private:
     void initSolo() {
          try {
              serial_port.Open(PORT_NAME);
-             std::cerr << "Trying to open serial port." << std::endl;
          } catch (const LibSerial::OpenFailed&) {
              try{
                  serial_port.Open(PORT_NAME_2);
-                 std::cerr << "2nd attempt at opening port" << std::endl;
              } catch(const LibSerial::OpenFailed&){
                  std::cerr << "The serial port did not open correctly." << std::endl;
                  return;
@@ -219,9 +218,13 @@ private:
 int main() {
 
     SoloUno solo1(0x00);
-    //int ad = solo1.readSpeed();
-    int ad = solo1.soloRead(0x81);
-    std::cout << ad << std::endl;
+
+    solo1.soloWrite(0xA5, 16); 
+    solo1.setSpeed(100.5);
+    solo1.setTorque(1.1);
+
+    int ad = solo1.readSpeed();
+
     solo1.end();
 
     return EXIT_SUCCESS;
