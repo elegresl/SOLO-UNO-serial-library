@@ -27,8 +27,8 @@ public:
         serial_port.FlushInputBuffer();
         serial_port.FlushOutputBuffer();
 
-        std::ofstream outputFile("solo_write.txt");
-
+        std::ofstream outputFile("testing.txt");
+        std::ofstream outputFile2("testing_transmission_issue.txt");
         char initiator = 0xFF;
         char address = this->address;
         char command = cmd;
@@ -39,15 +39,25 @@ public:
         char data2 = static_cast<char>((dataIn >> 8) & 0xFF);
         char data3 = static_cast<char>((dataIn & 0xFF));
 
+
         char crc = 0x00;
         char ending = 0xFE;
 
         char data_byte[] = {initiator, initiator, address, command, data0, data1, data2, data3, crc, ending};
 
+
         for (int x = 0; x < 10; x++) {
+            
+            std::stringstream ss;
+            ss << std::hex << data_byte[x];
+            std::string hexString = ss.str();
+            outputFile << ss.str();
+
             serial_port.WriteByte(data_byte[x]);
             serial_port.DrainWriteBuffer();
         }
+        
+        
 
         std::string reading;
         std::string writtenValue = std::string(1, data_byte[0]) + std::string(1, data_byte[1]) + std::string(1, data_byte[2]) +
@@ -55,14 +65,17 @@ public:
                                    std::string(1, data_byte[6]) + std::string(1, data_byte[7]) + std::string(1, data_byte[8]) +
                                    std::string(1, data_byte[9]);
 
+        std::cout << "Byte written to SOLO: " + writtenValue << std::endl;
+
         serial_port.Read(reading, 10, 50);
 
         std::stringstream ss;
         ss << reading;
         std::cout << ss.str() << std::endl;
 
-        outputFile << ss.str();
+        outputFile2 << ss.str();
         outputFile.close();
+        outputFile2.close();
 
         if (reading != writtenValue) {
             std::cout << "SOLO UNO WRITE ERROR" << std::endl;
@@ -73,12 +86,13 @@ public:
         }
     }
 
-    int soloRead(char cmd) {
+    uint32_t soloRead(char cmd) {
         serial_port.FlushIOBuffers();
         serial_port.FlushInputBuffer();
         serial_port.FlushOutputBuffer();
 
         std::ofstream outputFile("solo_read.txt");
+        std::ofstream receivedData("received_data.txt");
 
         char initiator = 0xFF;
         char address = this->address;
@@ -98,27 +112,22 @@ public:
         std::string reading;
         serial_port.Read(reading, 10, 50);
 
-        std::stringstream ss;
+       std::stringstream ss;
         ss << reading;
-        std::cout << "General read binary data returned data from SOLO: " + ss.str() << std::endl;
 
-        outputFile << ss.str();
+        receivedData << reading;
+        receivedData.close();
+
+        uint32_t formattedRead = formatRead(reading);  
+
         outputFile.close();
+        return formattedRead;
 
-
-
-        int intReading = 0;
-        for(char c : reading){
-            intReading = (intReading << 8) | static_cast<unsigned char>(c);
-        }
-        std::cout << "General read returned data from SOLO in int format: " + ss.str() << std::endl;
-        return intReading;
     }
 
-    int readSpeed() {
+    uint64_t readSpeed() {
         
-        int speed = soloRead(SPEED_FEEDBACK);
-        std::cout << "Speed was read as: " + speed << std::endl;
+        uint64_t speed = soloRead(SPEED_FEEDBACK);
         return speed;
 
     }
@@ -129,10 +138,9 @@ public:
 
     }
     void setTorque(double data){
+        
         int datt = data;
         int dat = doubleToFixedPoint(data); // Torque reference uses fixed point 32-17 for the data.
-        std::cout << "Torque was instructed to be: " + datt << std::endl;
-        std::cout <<  "Which is fixed point: " + dat << std::endl;
         soloWrite(TORQUE_REFERENCE, dat);
 
     }
@@ -145,6 +153,23 @@ public:
 
     }
 private:
+    
+    uint32_t formatRead(std::string reading){
+        uint32_t formattedInt = 0;
+
+        unsigned char b0 = static_cast<unsigned char>(reading[4]);
+        unsigned char b1 = static_cast<unsigned char>(reading[5]);
+        unsigned char b2 = static_cast<unsigned char>(reading[6]);
+        unsigned char b3 = static_cast<unsigned char>(reading[7]);
+
+        formattedInt = (static_cast<uint32_t>(b0) << 24) |
+                       (static_cast<uint32_t>(b1) << 16) |
+                       (static_cast<uint32_t>(b2) << 8) |
+                       static_cast<uint32_t>(b3);
+        //std::cout << "Formatted int: " << formattedInt << std::endl;
+
+        return formattedInt;
+    }
 
     void initSolo() {
          try {
@@ -219,11 +244,20 @@ int main() {
 
     SoloUno solo1(0x00);
 
-    solo1.soloWrite(0xA5, 16); 
-    solo1.setSpeed(100.5);
-    solo1.setTorque(1.1);
+    //solo1.soloWrite(TORQUE_REFERENCE, 0x01); 
+    //std::cout << "First line completed." << std::endl;
 
-    int ad = solo1.readSpeed();
+    //solo1.setSpeed(100.5);
+    //std::cout << "Second line completed." << std::endl;
+
+    //solo1.setTorque(4.2);
+    //std::cout << "Third line completed." << std::endl;
+    
+    //uint32_t ad = solo1.soloRead(SPEED_FEEDBACK);
+    //std::cout << "Fourth line completed." << ad << std::endl;
+
+    uint32_t ad = solo1.readSpeed();
+    std::cout << "Fifth line completed." << ad << std::endl;
 
     solo1.end();
 
