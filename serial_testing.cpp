@@ -22,13 +22,14 @@ public:
         initSolo();
     }
 
-    int soloWrite(char cmd, int data) {
+    int soloWriteFast(char cmd, int data) {
+     
+
         serial_port.FlushIOBuffers();
         serial_port.FlushInputBuffer();
         serial_port.FlushOutputBuffer();
 
-        std::ofstream outputFile("testing.txt");
-        std::ofstream outputFile2("testing_transmission_issue.txt");
+
         char initiator = 0xFF;
         char address = this->address;
         char command = cmd;
@@ -47,14 +48,44 @@ public:
 
 
         for (int x = 0; x < 10; x++) {
-            
-            std::stringstream ss;
-            ss << std::hex << data_byte[x];
-            std::string hexString = ss.str();
-            outputFile << ss.str();
 
             serial_port.WriteByte(data_byte[x]);
             serial_port.DrainWriteBuffer();
+        }
+     
+        return 0;
+        
+    }
+
+    int soloWriteSlow(char cmd, int data) { // Slower because it checks for errors in transmission.
+
+        serial_port.FlushIOBuffers();
+        serial_port.FlushInputBuffer();
+        serial_port.FlushOutputBuffer();
+
+
+        char initiator = 0xFF;
+        char address = this->address;
+        char command = cmd;
+        int dataIn = data;
+
+        char data0 = static_cast<char>((dataIn >> 24) & 0xFF);
+        char data1 = static_cast<char>((dataIn >> 16) & 0xFF);
+        char data2 = static_cast<char>((dataIn >> 8) & 0xFF);
+        char data3 = static_cast<char>((dataIn & 0xFF));
+
+
+        char crc = 0x00;
+        char ending = 0xFE;
+
+        char data_byte[] = {initiator, initiator, address, command, data0, data1, data2, data3, crc, ending};
+
+
+        for (int x = 0; x < 10; x++) {
+
+            serial_port.WriteByte(data_byte[x]);
+            serial_port.DrainWriteBuffer();
+
         }
         
         
@@ -65,34 +96,24 @@ public:
                                    std::string(1, data_byte[6]) + std::string(1, data_byte[7]) + std::string(1, data_byte[8]) +
                                    std::string(1, data_byte[9]);
 
-        std::cout << "Byte written to SOLO: " + writtenValue << std::endl;
+        serial_port.Read(reading, 10, 1);
 
-        serial_port.Read(reading, 10, 50);
-
-        std::stringstream ss;
-        ss << reading;
-        std::cout << ss.str() << std::endl;
-
-        outputFile2 << ss.str();
-        outputFile.close();
-        outputFile2.close();
-
-        if (reading != writtenValue) {
-            std::cout << "SOLO UNO WRITE ERROR" << std::endl;
-            return 1; // Write failure.
-        }
-        else{
-            return 0; // Successful write.
-        }
+         if (reading != writtenValue) {
+             std::cout << "SOLO UNO WRITE ERROR" << std::endl;
+             return 1; // Write failure.
+         }
+         else{
+             return 0; // Successful write.
+         }
     }
 
     uint32_t soloRead(char cmd) {
+
+       
+
         serial_port.FlushIOBuffers();
         serial_port.FlushInputBuffer();
         serial_port.FlushOutputBuffer();
-
-        std::ofstream outputFile("solo_read.txt");
-        std::ofstream receivedData("received_data.txt");
 
         char initiator = 0xFF;
         char address = this->address;
@@ -104,30 +125,28 @@ public:
 
         char data_byte[] = {initiator, initiator, address, command, data, data, data, data, crc, ending};
 
-        for (int x = 0; x < 10; x++) {
-            serial_port.WriteByte(data_byte[x]);
-            serial_port.DrainWriteBuffer();
-        }
+        
 
+          for (int x = 0; x < 10; x++) {
+              serial_port.WriteByte(data_byte[x]);
+              serial_port.DrainWriteBuffer();
+         }
+
+        
         std::string reading;
+
         serial_port.Read(reading, 10, 50);
-
-       std::stringstream ss;
-        ss << reading;
-
-        receivedData << reading;
-        receivedData.close();
-
+       
         uint32_t formattedRead = formatRead(reading);  
-
-        outputFile.close();
+       
         return formattedRead;
 
     }
 
     uint64_t readSpeed() {
-        
+
         uint64_t speed = soloRead(SPEED_FEEDBACK);
+
         return speed;
 
     }
@@ -137,24 +156,41 @@ public:
         serial_port.Close();
 
     }
-    void setTorque(double data){
-        
+    void setTorqueFast(double data){
+
         int datt = data;
         int dat = doubleToFixedPoint(data); // Torque reference uses fixed point 32-17 for the data.
-        soloWrite(TORQUE_REFERENCE, dat);
+        soloWriteFast(TORQUE_REFERENCE, dat);
 
     }
 
-    void setSpeed(double data){
-        
-        int dat = floor(data); // Speed reference uses unsigned int for the data.
-        std::cout << "Speed was instructed to be: " + dat << std::endl;
-        soloWrite(SPEED_REFERENCE, dat);
+    void setTorqueSlow(double data){
 
+        int datt = data;
+        int dat = doubleToFixedPoint(data); // Torque reference uses fixed point 32-17 for the data.
+        soloWriteSlow(TORQUE_REFERENCE, dat);
+      
+    }
+
+    void setSpeedFast(double data){
+
+        int dat = floor(data); // Speed reference uses unsigned int for the data.
+        soloWriteFast(SPEED_REFERENCE, dat);
+
+
+    }
+
+    void setSpeedSlow(double data){
+        
+
+        int dat = floor(data); // Speed reference uses unsigned int for the data.
+        soloWriteSlow(SPEED_REFERENCE, dat);
+        
     }
 private:
     
     uint32_t formatRead(std::string reading){
+        
         uint32_t formattedInt = 0;
 
         unsigned char b0 = static_cast<unsigned char>(reading[4]);
@@ -166,7 +202,6 @@ private:
                        (static_cast<uint32_t>(b1) << 16) |
                        (static_cast<uint32_t>(b2) << 8) |
                        static_cast<uint32_t>(b3);
-        //std::cout << "Formatted int: " << formattedInt << std::endl;
 
         return formattedInt;
     }
@@ -182,7 +217,8 @@ private:
                  return;
              }    
          }
-        serial_port.SetBaudRate(LibSerial::BaudRate::BAUD_115200);
+
+        serial_port.SetBaudRate(LibSerial::BaudRate::BAUD_921600);
         serial_port.SetCharacterSize(LibSerial::CharacterSize::CHAR_SIZE_8);
         serial_port.SetFlowControl(LibSerial::FlowControl::FLOW_CONTROL_NONE);
         serial_port.SetParity(LibSerial::Parity::PARITY_NONE);
@@ -192,7 +228,7 @@ private:
 
     }
     double fixedPointToDouble(int data){
-            // This process was built with guidance from the official SOLO UNO communicatio manual.
+            // This process was built with guidance from the official SOLO UNO communication manual.
 
             double result;
             double den = 131072;
@@ -242,22 +278,112 @@ private:
 
 int main() {
 
+    int count = 0;
+
+    double averageFastGeneralWrite;
+    double fastGeneralWriteSum = 0;
+    double averageSlowGeneralWrite ;
+    double slowGeneralWriteSum = 0;
+
+    double averageFastTorqueSetting;
+    double fastTorqueSettingSum = 0;
+    double averageSlowTorqueSetting;
+    double slowTorqueSettingSum = 0;
+
+    double averageFastSpeedSetting;
+    double fastSpeedSettingSum = 0;
+    double averageSlowSpeedSetting;
+    double slowSpeedSettingSum = 0;
+
+    double averageSpeedReading;
+    double speedReadingSum = 0;
+    
     SoloUno solo1(0x00);
 
-    //solo1.soloWrite(TORQUE_REFERENCE, 0x01); 
-    //std::cout << "First line completed." << std::endl;
-
-    //solo1.setSpeed(100.5);
-    //std::cout << "Second line completed." << std::endl;
-
-    //solo1.setTorque(4.2);
-    //std::cout << "Third line completed." << std::endl;
+    double limit = 1000.0;
+    while(count <= (int) limit){
     
-    //uint32_t ad = solo1.soloRead(SPEED_FEEDBACK);
-    //std::cout << "Fourth line completed." << ad << std::endl;
+    auto start_time = std::chrono::high_resolution_clock::now();
+    solo1.soloWriteFast(TORQUE_REFERENCE, 0x01);
+    auto end_time = std::chrono::high_resolution_clock::now(); 
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+    
 
+    fastGeneralWriteSum += duration.count();
+
+    start_time = std::chrono::high_resolution_clock::now();
+    solo1.soloWriteSlow(TORQUE_REFERENCE, 0x01); 
+    end_time = std::chrono::high_resolution_clock::now(); 
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+    slowGeneralWriteSum += duration.count();
+    
+    start_time = std::chrono::high_resolution_clock::now();
+    solo1.setTorqueFast(4.2);
+    end_time = std::chrono::high_resolution_clock::now(); 
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+    fastTorqueSettingSum += duration.count();
+
+    start_time = std::chrono::high_resolution_clock::now();
+    solo1.setTorqueSlow(4.2);
+    end_time = std::chrono::high_resolution_clock::now(); 
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+    slowTorqueSettingSum += duration.count();
+
+    start_time = std::chrono::high_resolution_clock::now();
+    solo1.setSpeedFast(100.5);
+    end_time = std::chrono::high_resolution_clock::now(); 
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+    fastSpeedSettingSum += duration.count();
+
+    start_time = std::chrono::high_resolution_clock::now();
+    solo1.setSpeedSlow(100.5);
+    end_time = std::chrono::high_resolution_clock::now(); 
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+    slowSpeedSettingSum += duration.count();
+
+    start_time = std::chrono::high_resolution_clock::now();
     uint32_t ad = solo1.readSpeed();
-    std::cout << "Fifth line completed." << ad << std::endl;
+    end_time = std::chrono::high_resolution_clock::now(); 
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+    speedReadingSum += duration.count();
+
+
+    count++;
+
+    }
+
+    averageFastGeneralWrite = fastGeneralWriteSum/limit;
+    std::cout << "_________________________________________________________________" << std::endl;
+
+    std::cout << "Mean fastGeneralWrite() Execution time: " << averageFastGeneralWrite << " microseconds" << std::endl;
+
+    averageSlowGeneralWrite = slowGeneralWriteSum/limit;
+    std::cout << "Mean slowGeneralWrite() Execution time: " << averageSlowGeneralWrite << " microseconds" << std::endl;
+
+    std::cout << "_________________________________________________________________" << std::endl;
+
+    averageFastTorqueSetting = fastTorqueSettingSum/limit;
+    std::cout << "Mean fastTorqueSetting() Execution time: " << averageFastTorqueSetting << " microseconds" << std::endl;
+
+    averageSlowTorqueSetting = slowTorqueSettingSum/limit;
+    std::cout << "Mean slowTorqueSetting() Execution time: " << averageSlowTorqueSetting << " microseconds" << std::endl;
+
+    std::cout << "_________________________________________________________________" << std::endl;
+    
+    averageFastSpeedSetting = fastSpeedSettingSum/limit;
+    std::cout << "Mean fastSpeedSetting() Execution time: " << averageFastSpeedSetting << " microseconds" << std::endl;
+    
+    averageSlowSpeedSetting = slowSpeedSettingSum/limit;
+    std::cout << "Mean slowSpeedSetting() Execution time: " << averageSlowSpeedSetting << " microseconds" << std::endl;
+
+    std::cout << "_________________________________________________________________" << std::endl;
+    
+    averageSpeedReading = speedReadingSum/limit;
+    std::cout << "Mean speedReading() Execution time: " << averageSpeedReading << " microseconds" << std::endl;
+    
+    std::cout << "_________________________________________________________________" << std::endl;
+
+    std::cout << "Test iterations: " << limit <<  std::endl;
 
     solo1.end();
 
